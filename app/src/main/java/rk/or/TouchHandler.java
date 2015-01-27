@@ -1,5 +1,6 @@
 package rk.or;
 
+import android.content.Context;
 import android.view.MotionEvent;
 
 import rk.or.android.ModelView;
@@ -35,19 +36,19 @@ public class TouchHandler {
             if (e.getAction() == MotionEvent.ACTION_UP) {
                 // Triple tap undo - UpUpTime is set by double tap
                 if ((System.currentTimeMillis() - lastUpUpTime) < 500) {
-                    mMainPane.commands.command("u");
+                    mMainPane.commands.command("u", mMainPane);
                 }
                 // Double tap restore rotation and zoom fit
                 else if ((System.currentTimeMillis() - lastUpTime) < 500) {
                     lastUpUpTime = System.currentTimeMillis();
                     mMainPane.view3d.rotateRestore();
-                    mMainPane.commands.command("zf");
+                    mMainPane.commands.command("zf", mMainPane);
                 }
                 // Simple tap continue, if we we were not already running and paused by touch down
                 else if ((System.currentTimeMillis() - lastDownTime) < 500) {
                     lastUpTime = System.currentTimeMillis();
                     if (!wasRunning) {
-                        mMainPane.commands.command("co");
+                        mMainPane.commands.command("co", mMainPane);
                     }
                 }
             }
@@ -57,7 +58,7 @@ public class TouchHandler {
                 if (mMainPane.commands.state == Commands.State.run
                         || mMainPane.commands.state == Commands.State.anim) {
                     wasRunning = true;
-                    mMainPane.commands.command("pa");
+                    mMainPane.commands.command("pa", mMainPane);
                 } else
                     // We were already in pause, touch up should continue
                     wasRunning = false;
@@ -81,7 +82,7 @@ public class TouchHandler {
             // Second pointer up short after pointer down
             else if (e.getAction() == MotionEvent.ACTION_POINTER_2_UP
                     && (System.currentTimeMillis() - lastDownTime) < 500) {
-                mMainPane.commands.command("u");
+                mMainPane.commands.command("u", mMainPane);
                 mMainPane.view3d.rotateRestore();
             }
             // Zoom rotate with two fingers

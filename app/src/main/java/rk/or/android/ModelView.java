@@ -41,7 +41,7 @@ public class ModelView extends Activity {
     if (modelName == null)
     	modelName ="cocotte.txt";
     Log.e("ssg", "model = " + modelName);
-    commands.command("read "+modelName); 
+    commands.command("read "+modelName, this);
   }
   @Override
   protected void onResume() {

@@ -1,5 +1,8 @@
 package rk.or;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
@@ -68,7 +71,7 @@ public class Commands {
     /**
      * Main entry point on state machine
      */
-    public synchronized void command(String cde) {
+    public synchronized void command(String cde, Context context) {
 // -- State Idle tokenize list of command
         Log.e("ssg", "cde = " + cde);
         if (state == State.idle) {
@@ -80,7 +83,7 @@ public class Commands {
                 return;
             } else if (cde.startsWith("read")) {
                 String filename = cde.substring(5);
-                cde = read(filename.trim());
+                cde = read(filename.trim(), context);
                 Log.e("ssg", "cde = " + cde);
                 done.clear();
                 undo.clear();
@@ -690,20 +693,26 @@ public class Commands {
     /**
      * Read a File in a String
      */
-    private String read(String name) {
-        Log.e("ssg", "name = " + name);
-        URL fileURL = Commands.class.getResource("/rk/or/models/" + name);
-        Log.e("ssg", "fileURL = " + fileURL);
-        InputStream input;
+    private String read(String name, Context context) {
+//        context.getAssets().open("name");
+//        Log.e("ssg", "name = " + name);
+//        URL fileURL = Commands.class.getResource("rk//or//models//" + name);
+//        Log.e("ssg", "fileURL = " + "//rk//or//models//" + name);
+//        URL url = Commands.class.getResource("");
+//        URL url1 = Commands.class.getResource("/");
+//        URL url2 = ClassLoader.getSystemResource("");
+//        Log.e("ssg", "url = " + url);
+//        Log.e("ssg", "url1 = " + url1);
+////        Log.e("ssg", "url2 = " + url2);
+//        InputStream input;
         StringBuffer sb = new StringBuffer();
         try {
             // If the file is not in the jar, get it strait
-            if (fileURL == null)
-                fileURL = new File(name).toURI().toURL();
+            InputStream input;
+            URL fileURL = new File(name).toURI().toURL();
             // We do not use openRawResource() which depends on android
             // Open and read all characters in the StringBuffer
-            Log.e("ssg", "fileURL = " + fileURL);
-            input = fileURL.openStream();
+            input = context.getAssets().open(name);
             Log.e("ssg", "input = " + input);
             int car = 0;
             while ((car = input.read()) != -1) {
