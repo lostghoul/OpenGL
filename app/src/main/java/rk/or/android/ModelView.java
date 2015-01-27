@@ -37,8 +37,10 @@ public class ModelView extends Activity {
     view3d.setFocusableInTouchMode(true);
     
     String modelName = getIntent().getStringExtra("model");
+    Log.e("ssg", "model = " + modelName);
     if (modelName == null)
     	modelName ="cocotte.txt";
+    Log.e("ssg", "model = " + modelName);
     commands.command("read "+modelName); 
   }
   @Override
